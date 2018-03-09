@@ -3,6 +3,8 @@ name = "alpha-bleeder"
 version = "0.1.0"
 authors = ["AmaranthineCodices <AmaranthineCodices@gmail.com>"]
 repository = "https://github.com/AmaranthineCodices/alpha-bleeder"
+license = "MIT"
+description = "Bleeds color from non-transparent pixels to the surrounding transparent pixels."
 
 [dependencies]
 image = "0.18.*"
