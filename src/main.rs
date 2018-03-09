@@ -1,6 +1,49 @@
 extern crate image;
 
-use image::{GenericImage, Pixel, Rgba};
+use std::collections::{VecDeque, HashSet};
+use image::{GenericImage, ImageBuffer, Pixel, Rgba};
+
+type ImageCoordinates = (u32, u32);
+
+fn get_closest_opaque_pixel<'a>(img: &'a ImageBuffer<Rgba<u8>, std::vec::Vec<u8>>, x: u32, y: u32) -> Option<&'a Rgba<u8>> {
+    let mut queue: VecDeque<ImageCoordinates> = VecDeque::new();
+    let mut seen: HashSet<ImageCoordinates> = HashSet::new();
+    queue.push_front((x, y));
+
+    while queue.len() > 0 {
+        let current = queue.pop_front().unwrap();
+
+        if !seen.contains(&current) {
+            seen.insert(current);
+
+            let current_x = current.0;
+            let current_y = current.1;
+
+            if img.in_bounds(current_x, current_y) {
+                let pixel_at = img.get_pixel(current.0, current.1);
+            
+                if pixel_at.channels4().3 != 0 {
+                    return Some(&pixel_at);
+                }
+                else {
+                    // stop overflow
+                    if current_x > 0 {
+                        queue.push_back((current_x - 1, current_y));
+                    }
+
+                    if current_y > 0 {
+                        queue.push_back((current_x, current_y - 1));
+                    }
+
+                    queue.push_back((current_x + 1, current_y));
+                    queue.push_back((current_x, current_y + 1));
+                }
+            }
+        }
+    }
+
+    None
+}
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -20,23 +63,10 @@ fn main() {
                     let alpha = pixel.channels4().3;
 
                     if alpha == 0 {
-                        let mut nearest_opaque = &image::Rgba([0, 0, 0, 0]);
-                        let mut nearest_dist: f64 = std::f64::INFINITY;
+                        let nearest_opaque = get_closest_opaque_pixel(reference_rgba, x, y).unwrap();
+                        let channels = nearest_opaque.channels4();
 
-                        for (other_x, other_y, other_pixel) in reference_rgba.enumerate_pixels() {
-                            let other_alpha = other_pixel.channels4().3;
-
-                            if other_alpha > 0 {
-                                let dist = ((x as f64 - other_x as f64).powi(2) + (y as f64 - other_y as f64).powi(2)).sqrt();
-
-                                if dist < nearest_dist {
-                                    nearest_opaque = other_pixel;
-                                    nearest_dist = dist;
-                                }
-                            }
-                        }
-
-                        *pixel = Rgba([nearest_opaque.channels4().0, nearest_opaque.channels4().1, nearest_opaque.channels4().2, alpha]);
+                        *pixel = Rgba([channels.0, channels.1, channels.2, alpha]);
                     }
                 }
             }
