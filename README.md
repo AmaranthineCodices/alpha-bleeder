@@ -16,5 +16,5 @@ $ cargo install alpha-bleeder
 Then run it as:
 
 ```
-alpha-bleeder <input> <output>
+$ alpha-bleeder <input> <output>
 ```
