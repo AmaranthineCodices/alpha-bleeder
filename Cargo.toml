@@ -1,0 +1,7 @@
+[package]
+name = "alpha-bleeder"
+version = "0.1.0"
+authors = ["AmaranthineCodices <AmaranthineCodices@gmail.com>"]
+
+[dependencies]
+image = "0.18.*"
