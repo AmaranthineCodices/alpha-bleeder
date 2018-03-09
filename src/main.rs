@@ -36,7 +36,7 @@ fn main() {
                             }
                         }
 
-                        *pixel = image::Rgba([nearest_opaque.channels4().0, nearest_opaque.channels4().1, nearest_opaque.channels4().2, alpha]);
+                        *pixel = Rgba([nearest_opaque.channels4().0, nearest_opaque.channels4().1, nearest_opaque.channels4().2, alpha]);
                     }
                 }
             }
