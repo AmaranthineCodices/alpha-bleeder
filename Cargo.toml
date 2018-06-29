@@ -8,3 +8,5 @@ description = "Bleeds color from non-transparent pixels to the surrounding trans
 
 [dependencies]
 image = "0.18.*"
+threadpool = "1.7.1"
+clap = "2.32.0"
