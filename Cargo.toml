@@ -1,6 +1,6 @@
 [package]
 name = "alpha-bleeder"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["AmaranthineCodices <AmaranthineCodices@gmail.com>"]
 repository = "https://github.com/AmaranthineCodices/alpha-bleeder"
 license = "MIT"
